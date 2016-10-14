@@ -25,7 +25,7 @@ def stream_docs(path):
     with open(path,'r') as csv:
         next(csv)
         for line in csv:
-            text,label = line[:3], int(line[-2])
+            text,label = line[:-3], int(line[-2])
             yield text, label
 
 def get_minibatch(doc_stream,size):
@@ -59,4 +59,15 @@ X_test = vect.transform(X_test)
 print ('Accuracy: %3f' % clf.score(X_test,y_test))
 clf=clf.partial_fit(X_test,y_test)
 print ('Accuracy: %3f' % clf.score(X_test,y_test))
+
+# serializing the estimator
+import pickle
+import os
+dest = os.path.join('movieclassifier','pkl_objects')
+if not os.path.exists(dest):
+    os.makedirs(dest)
+pickle.dump(stop, open(os.path.join(dest,'stopwords.pkl'),'wb'),protocol=2)
+pickle.dump(clf,open(os.path.join(dest,'classifier.pkl'),'wb'),protocol=2)
+ 
+
     
